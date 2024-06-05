@@ -91,4 +91,11 @@ def main():
         if output_file:
             with open(output_file, 'w', encoding='utf-8') as file:
                 file.write(output)
-        els
+        else:
+            print(output)
+    except Exception as e:
+        print(f"Error: invalid markdown {str(e)}", file=sys.stderr)
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
