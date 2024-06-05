@@ -18,17 +18,13 @@ def parse_markdown(md_text, output_format='ANSI'):
         if paragraph.count('**') % 2 != 0 or paragraph.count('`') % 2 != 0:
             raise Exception("Invalid markdown syntax")
 
-        # Check for single underscores that are not part of a word or within quotes
-        if paragraph == '_' or (paragraph.count('_') % 2 != 0 and not re.search(r'\b_\b', paragraph)):
-            raise Exception("Invalid markdown syntax")
-
-        # Allow underscores within words
-        def valid_underscore_use(p):
-            parts = p.split('_')
-            return all(len(part) == 0 or part.isalnum() for part in parts) or len(parts) % 2 == 0
-
-        # If underscores are not part of a word or not balanced, raise an exception
-        if not valid_underscore_use(paragraph) and not all(char.isalnum() or char in " \t" for char in paragraph.replace('_', '')):
+        # Allow underscores within words and valid underscore usage for italic
+        parts = re.split(r'(_)', paragraph)
+        underscore_balance = 0
+        for part in parts:
+            if part == '_':
+                underscore_balance += 1
+        if underscore_balance % 2 != 0:
             raise Exception("Invalid markdown syntax")
 
         if output_format == 'HTML':
@@ -95,11 +91,4 @@ def main():
         if output_file:
             with open(output_file, 'w', encoding='utf-8') as file:
                 file.write(output)
-        else:
-            print(output)
-    except Exception as e:
-        print(f"Error: invalid markdown {str(e)}", file=sys.stderr)
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main()
+        els
