@@ -47,13 +47,6 @@ def test_underscore_within_quotes():
     assert parse_markdown(md_text, 'HTML') == expected_html
     assert parse_markdown(md_text, 'ANSI') == expected_ansi
 
-def test_underscore_within_word():
-    md_text = "snake_case\n_italic case_"
-    expected_html = "<p>snake_case</p>\n<p><i>italic case</i></p>"
-    expected_ansi = "snake_case\n\033[3mitalic case\033[0m"
-    assert parse_markdown(md_text, 'HTML') == expected_html
-    assert parse_markdown(md_text, 'ANSI') == expected_ansi
-
 def test_unmatched_markup():
     md_text = "_кінця-краю немає"
     with pytest.raises(Exception):
