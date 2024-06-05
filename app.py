@@ -22,6 +22,15 @@ def parse_markdown(md_text, output_format='ANSI'):
         if paragraph == '_' or (paragraph.count('_') % 2 != 0 and not re.search(r'\b_\b', paragraph)):
             raise Exception("Invalid markdown syntax")
 
+        # Allow underscores within words
+        def valid_underscore_use(p):
+            parts = p.split('_')
+            return all(len(part) == 0 or part.isalnum() for part in parts) or len(parts) % 2 == 0
+
+        # If underscores are not part of a word or not balanced, raise an exception
+        if not valid_underscore_use(paragraph) and not all(char.isalnum() or char in " \t" for char in paragraph.replace('_', '')):
+            raise Exception("Invalid markdown syntax")
+
         if output_format == 'HTML':
             paragraph = bold_pattern.sub(r'<b>\1</b>', paragraph)
             paragraph = italic_pattern.sub(r'<i>\1</i>', paragraph)
