@@ -18,13 +18,8 @@ def parse_markdown(md_text, output_format='ANSI'):
         if paragraph.count('**') % 2 != 0 or paragraph.count('`') % 2 != 0:
             raise Exception("Invalid markdown syntax")
 
-        # Allow underscores within words and valid underscore usage for italic
-        parts = re.split(r'(_)', paragraph)
-        underscore_balance = 0
-        for part in parts:
-            if part == '_':
-                underscore_balance += 1
-        if underscore_balance % 2 != 0:
+        # Check for single underscores that are not part of a word or within quotes
+        if paragraph == '_' or (paragraph.count('_') % 2 != 0 and not re.search(r'\b_\b', paragraph)):
             raise Exception("Invalid markdown syntax")
 
         if output_format == 'HTML':
